@@ -25,9 +25,9 @@ namespace W3_HK_TaxCalculator
 
         #region Event
 
-        private void W3_HW_TaxCalculator_Load(object sender, EventArgs e)
+        private void W3_HW_TaxCalculator_Load(object sender, EventArgs e) //載入表單並初始化
         {
-            Init();
+            Init(); 
         }
 
         private void year_rBtn_CheckedChanged(object sender, EventArgs e)
@@ -52,11 +52,15 @@ namespace W3_HK_TaxCalculator
                 this.dateTipText.Visible = true;
                 this.dateTipText.Text = "日期格式有誤,選單一日期應在選單二之前";
                 this.car_CBX.Enabled = false;
+                this.tax_CBX.Enabled = false;
+                this.calculator_Btn.Enabled = false;
             }
             else
             {
                 this.dateTipText.Visible = false;
                 this.car_CBX.Enabled = true;
+                this.tax_CBX.Enabled = true;
+                this.calculator_Btn.Enabled =true;
             }
         }
 

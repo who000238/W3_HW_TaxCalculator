@@ -46,7 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MethodClass.cs" />
     <Compile Include="TaxClass.cs" />
     <Compile Include="W3_HW_TaxCalculator.cs">
       <SubType>Form</SubType>

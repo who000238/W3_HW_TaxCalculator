@@ -150,9 +150,9 @@ namespace W3_HK_TaxCalculator
             "大客車",
             "自用小客車",
             "營業用小客車"});
-            this.car_CBX.Location = new System.Drawing.Point(277, 13);
+            this.car_CBX.Location = new System.Drawing.Point(208, 13);
             this.car_CBX.Name = "car_CBX";
-            this.car_CBX.Size = new System.Drawing.Size(327, 36);
+            this.car_CBX.Size = new System.Drawing.Size(396, 36);
             this.car_CBX.TabIndex = 10;
             this.car_CBX.SelectedValueChanged += new System.EventHandler(this.car_CBX_SelectedValueChanged);
             // 
@@ -238,9 +238,9 @@ namespace W3_HK_TaxCalculator
             this.tax_CBX.Enabled = false;
             this.tax_CBX.Font = new System.Drawing.Font("新細明體", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.tax_CBX.FormattingEnabled = true;
-            this.tax_CBX.Location = new System.Drawing.Point(277, 10);
+            this.tax_CBX.Location = new System.Drawing.Point(208, 10);
             this.tax_CBX.Name = "tax_CBX";
-            this.tax_CBX.Size = new System.Drawing.Size(327, 36);
+            this.tax_CBX.Size = new System.Drawing.Size(396, 36);
             this.tax_CBX.TabIndex = 11;
             // 
             // label3

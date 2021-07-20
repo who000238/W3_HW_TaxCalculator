@@ -20,30 +20,12 @@ namespace W3_HK_TaxCalculator
 
         #region Variable Declaration                                  
         DateTime startDate, endDate;
-        public decimal finalResult;
-        #endregion
-        #region taxLevel
-        public int[][] taxLevel = new int[][]
-        {
-        new int[] { 0,800,1620,2160,4320,7120,11230},
-        new int[] { 900,1080,1800,2700,3600,4500,5400,6300,7200,8100,9000,9900,10800,11700,12600,13500,14400,15300,16200},
-        new int[] { 1080,1800, 2700, 3600, 4500, 5400, 6300, 7200, 8100, 9000, 9900, 10800, 11700, 12600, 13500, 14400, 15300, 16200 },
-        new int[] { 1620,2160,4320,7120,11230,15210,28220,46170,69690,117000,151200},
-        new int[] { 900,1260,2160,3060,6480,9900,16380,24300,33660,44460,56700}
-        };
-        #endregion 
-        #region ComboBox's Item
-        //string[] car_CBXArray = new string[] { "機車", "貨車", "大客車", "自用小客車", "營業用小客車" };
-        //string[] scooterArray = new string[] { "150cc 以下", "151cc~ 250cc", "251cc~ 500cc", "501cc~ 600cc", "601cc~1200cc", "1201cc~1800cc", "1801cc 以上", };
-        //string[] truckArray = new string[] { "500cc 以下", "501cc - 600cc", "601cc - 1200cc", "1201cc - 1800cc", "1801cc - 2400cc", "2401cc - 3000cc", "3001cc~3600cc", "3601cc~4200cc", "4201cc~4800cc", "4801cc~5400cc", "5401cc~6000cc", "6001cc~6600cc", "6601cc~7200cc", "7201cc~7800cc", "7801cc~8400cc", "8401cc~9000cc", "9001cc~9600cc", "9601cc~10200cc", "10201cc 以上" };
-        //string[] busArray = new string[] { "501cc - 600cc", "601cc - 1200cc", "1201cc - 1800cc", "1801cc - 2400cc", "2401cc - 3000cc", "3001cc~3600cc", "3601cc~4200cc", "4201cc~4800cc", "4801cc~5400cc", "5401cc~6000cc", "6001cc~6600cc", "6601cc~7200cc", "7201cc~7800cc", "7801cc~8400cc", "8401cc~9000cc", "9001cc~9600cc", "9601cc~10200cc", "10201cc 以上" };
-        //string[] carArray = new string[] { "500cc 以下", "501cc - 600cc", "601cc - 1200cc", "1201cc - 1800cc", "1801cc - 2400cc", "2401cc - 3000cc", "3001cc - 4200cc", "4201cc - 5400cc", "5401cc - 6600cc", "6601cc - 7800cc", "7801cc 以上" };
-        //string[] carForBusinessArray = new string[] { "500cc 以下", "501cc - 600cc", "601cc - 1200cc", "1201cc - 1800cc", "1801cc - 2400cc", "2401cc - 3000cc", "3001cc - 4200cc", "4201cc - 5400cc", "5401cc - 6600cc", "6601cc - 7800cc", "7801cc 以上" };
+        public decimal fullYearResult , result, resultSum;
         #endregion
 
         #region Event
 
-        private void W3_HK_TaxCalculator_Load(object sender, EventArgs e)
+        private void W3_HW_TaxCalculator_Load(object sender, EventArgs e)
         {
             Init();
         }
@@ -61,7 +43,7 @@ namespace W3_HK_TaxCalculator
             this.reset_Btn.Enabled = true;
         }
 
-        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        public void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
             startDate = dateTimePicker1.Value.Date;
             endDate = dateTimePicker2.Value.Date;
@@ -75,7 +57,6 @@ namespace W3_HK_TaxCalculator
             {
                 this.dateTipText.Visible = false;
                 this.car_CBX.Enabled = true;
-
             }
         }
 
@@ -84,71 +65,109 @@ namespace W3_HK_TaxCalculator
             this.panel3.Visible = true;
             this.tax_CBX.Enabled = true;
             this.reset_Btn.Enabled = true;
-
-
             if (this.car_CBX.SelectedItem as string == "機車")
-            {
-                this.tax_CBX.DataSource = MethodClass.scooterArray;
-            }
+                this.tax_CBX.DataSource = TaxClass.scooterArray;
             else if (this.car_CBX.SelectedItem as string == "貨車")
-            {
-                this.tax_CBX.DataSource = MethodClass.truckArray;
-            }
+                this.tax_CBX.DataSource = TaxClass.truckArray;
             else if (this.car_CBX.SelectedItem as string == "大客車")
-            {
-                this.tax_CBX.DataSource = MethodClass.busArray;
-            }
+                this.tax_CBX.DataSource = TaxClass.busArray;
             else if (this.car_CBX.SelectedItem as string == "自用小客車")
-            {
-                this.tax_CBX.DataSource = MethodClass.carArray;
-            }
+                this.tax_CBX.DataSource = TaxClass.carArray;
             else if (this.car_CBX.SelectedItem as string == "營業用小客車")
-            {
-                this.tax_CBX.DataSource = MethodClass.carForBusinessArray;
-            }
+                this.tax_CBX.DataSource = TaxClass.carForBusinessArray;
         }
-
-
 
         private void reset_Btn_Click(object sender, EventArgs e)
         {
             Init();
-            MessageBox.Show(Convert.ToString(MethodClass.get__result(1,2)));
         }
 
         private void calculator_Btn_Click(object sender, EventArgs e)
         {
             this.lbl_Result.Text = string.Empty;
-            if (this.year_rBtn.Checked)
+            if (year_rBtn.Checked)
             {
-                this.lbl_Result.Text = $"使用期間 : {this.dateTimePicker1.Value.ToString("yyyy-1-1")} ~ {this.dateTimePicker2.Value.ToString("yyyy-12-31")}" + Environment.NewLine + $"計算天數 : {usedDate()}" + Environment.NewLine + $"排氣量 : {this.tax_CBX.SelectedItem.ToString()}" + Environment.NewLine + $"用途 : {this.car_CBX.SelectedItem.ToString()}" + Environment.NewLine + $"計算公式 : {taxLevel[this.car_CBX.SelectedIndex][this.tax_CBX.SelectedIndex]} * {usedDate()} / {isLeapYear(this.dateTimePicker1.Value.Year)} = {getResult().ToString("#,0")} 元" + Environment.NewLine + $"應納稅額 : {getResult().ToString("#,0")} 元";
+                this.lbl_Result.Text =
+                    $"使用期間 : {this.dateTimePicker1.Value.ToString("yyyy-1-1")} ~ {this.dateTimePicker2.Value.ToString("yyyy-12-31")}" + Environment.NewLine +
+                    $"計算天數 : {usedDate()}" + Environment.NewLine +
+                    $"排氣量 : {this.tax_CBX.SelectedItem.ToString()}" + Environment.NewLine +
+                    $"用途 : {this.car_CBX.SelectedItem.ToString()}" + Environment.NewLine +
+                    $"計算公式 : {TaxClass.taxLevel[this.car_CBX.SelectedIndex][this.tax_CBX.SelectedIndex]} * {usedDate()} / {isLeapYear(this.dateTimePicker1.Value.Year)} = {getResult().ToString("#,0")} 元" + Environment.NewLine +
+                    $"應納稅額 : {getResult().ToString("#,0")} 元";
+                MessageBox.Show(this.lbl_Result.Text);
             }
-            else if (this.date_rBtn.Checked)
+            else if (date_rBtn.Checked)
             {
-                for (int i = this.dateTimePicker1.Value.Year; i <= this.dateTimePicker2.Value.Year; i++)
+                if (dateTimePicker1.Value.Year == dateTimePicker2.Value.Year)
                 {
-                    this.lbl_Result.Text +=
-                       $"使用期間 : {this.dateTimePicker1.Value.ToString("yyyy-MM-dd")} ~ {this.dateTimePicker2.Value.ToString("yyyy-MM-dd")}" + Environment.NewLine +
-                       $"計算天數 : {isLeapYear(i)}" + Environment.NewLine +
-                       $"排氣量 : {this.tax_CBX.SelectedItem.ToString()}" + Environment.NewLine +
-                       $"用途 : {this.car_CBX.SelectedItem.ToString()}" + Environment.NewLine +
-                       $"計算公式 : {taxLevel[this.car_CBX.SelectedIndex][this.tax_CBX.SelectedIndex]} * {usedDate()} / {isLeapYear(i)} = {getResult().ToString("#,0")} 元" + Environment.NewLine +
-                       $"應納稅額 : {getResult().ToString("#,0")} 元" + Environment.NewLine + Environment.NewLine;
+                    this.lbl_Result.Text =
+                        $"使用期間 : {this.dateTimePicker1.Value.ToString("yyyy-MM-dd")} ~ {this.dateTimePicker2.Value.ToString("yyyy-MM-dd")}" + Environment.NewLine +
+                        $"計算天數 : {usedDate()}" + Environment.NewLine +
+                        $"排氣量 : {this.tax_CBX.SelectedItem.ToString()}" + Environment.NewLine +
+                        $"用途 : {this.car_CBX.SelectedItem.ToString()}" + Environment.NewLine +
+                        $"計算公式 : {TaxClass.taxLevel[this.car_CBX.SelectedIndex][this.tax_CBX.SelectedIndex]} * {usedDate()} / {isLeapYear(this.dateTimePicker1.Value.Year)} = {getResult().ToString("#,0")} 元" + Environment.NewLine +
+                        $"應納稅額 : {getResult().ToString("#,0")} 元";
+                    MessageBox.Show(this.lbl_Result.Text);
                 }
+                else
+                {
+                    resultSum = 0;
+                    int i = this.dateTimePicker1.Value.Year;
+                    if (i == dateTimePicker1.Value.Year)
+                    {
+                        result = TaxClass.taxLevel[this.car_CBX.SelectedIndex][this.tax_CBX.SelectedIndex] * sYearUsedDate() / isLeapYear(i);
+                        this.lbl_Result.Text +=
+                            $"使用期間 : {this.dateTimePicker1.Value.ToString("yyyy-MM-dd")} ~ {this.dateTimePicker1.Value.ToString("yyyy-12-31")}" + Environment.NewLine +
+                            $"計算天數 : {sYearUsedDate()}" + Environment.NewLine +
+                            $"排氣量 : {this.tax_CBX.SelectedItem.ToString()}" + Environment.NewLine +
+                            $"用途 : {this.car_CBX.SelectedItem.ToString()}" + Environment.NewLine +
+                            $"計算公式 : {TaxClass.taxLevel[this.car_CBX.SelectedIndex][this.tax_CBX.SelectedIndex]} * {sYearUsedDate()} / {isLeapYear(i)} = {result.ToString("#,0")} 元" + Environment.NewLine + Environment.NewLine;
+                        resultSum += result;
+                        i++;
+                    }
+                    while (i != this.dateTimePicker2.Value.Year)
+                    {
+                        result = TaxClass.taxLevel[this.car_CBX.SelectedIndex][this.tax_CBX.SelectedIndex];
+                        this.lbl_Result.Text +=
+                            $"使用期間 : {i}-1-1 ~ {i}-12-31" + Environment.NewLine +
+                            $"計算天數 : {isLeapYear(i)}" + Environment.NewLine +
+                            $"排氣量 : {this.tax_CBX.SelectedItem.ToString()}" + Environment.NewLine +
+                            $"用途 : {this.car_CBX.SelectedItem.ToString()}" + Environment.NewLine +
+                            $"計算公式 : {TaxClass.taxLevel[this.car_CBX.SelectedIndex][this.tax_CBX.SelectedIndex]} * {isLeapYear(i)} / {isLeapYear(i)} = {result.ToString("#,0")} 元" + Environment.NewLine + Environment.NewLine;
+                        resultSum += result;
+                        i++;
+                    }
+                    if (i == dateTimePicker2.Value.Year)
+                    {
+                        result = TaxClass.taxLevel[this.car_CBX.SelectedIndex][this.tax_CBX.SelectedIndex] * eYearUsedDate() / isLeapYear(i);
+                        this.lbl_Result.Text +=
+                            $"使用期間 : {this.dateTimePicker2.Value.ToString("yyyy-1-1")} ~ {this.dateTimePicker2.Value.ToString("yyyy-MM-dd")}" + Environment.NewLine +
+                            $"計算天數 : {eYearUsedDate()}" + Environment.NewLine +
+                            $"排氣量 : {this.tax_CBX.SelectedItem.ToString()}" + Environment.NewLine +
+                            $"用途 : {this.car_CBX.SelectedItem.ToString()}" + Environment.NewLine +
+                            $"計算公式 : {TaxClass.taxLevel[this.car_CBX.SelectedIndex][this.tax_CBX.SelectedIndex]} * {eYearUsedDate()} / {isLeapYear(i)} = {result.ToString("#,0")} 元" + Environment.NewLine + Environment.NewLine;
+                        resultSum += result;
+                    }
+                    this.lbl_Result.Text += $"應納稅額 : {resultSum.ToString("#,0")} 元";
+                    MessageBox.Show(this.lbl_Result.Text);
+                }
+
             }
         }
-
         #endregion
 
         #region Method
-        private void Init()
+        private void Init() //初始化表單
         {
             this.year_rBtn.Checked = true;
             this.lbl_Result.Text = string.Empty;
-            this.car_CBX.DataSource = MethodClass.car_CBXArray;
+            this.car_CBX.SelectedIndex = 0;
+            this.tax_CBX.SelectedIndex += 0;
+            this.dateTimePicker1.Value = DateTime.Today;
+            this.dateTimePicker2.Value = DateTime.Today;
         }
 
-        private int usedDate()
+        private int usedDate() //計算使用天數
         {
             if (this.year_rBtn.Checked)
                 return isLeapYear(this.dateTimePicker1.Value.Year);
@@ -160,7 +179,21 @@ namespace W3_HK_TaxCalculator
             return 0;
         }
 
-        private int isLeapYear(int year)
+        private int sYearUsedDate() //選取時間超過一年 計算第一年的使用天數
+        {
+            DateTime startYearLastDay = new DateTime(dateTimePicker1.Value.Year, 12, 31);
+            int days = new TimeSpan(startYearLastDay.Ticks - startDate.Ticks).Days;
+            return days + 1;
+        }
+
+        private int eYearUsedDate() //選取時間超過一年 計算最後一年的使用天數
+        {
+            DateTime endYearFirstDay = new DateTime(dateTimePicker2.Value.Year, 1, 1);
+            int days = new TimeSpan(endDate.Ticks - endYearFirstDay.Ticks).Days;
+            return days + 1;
+        }
+
+        private int isLeapYear(int year) //辨別閏年
         {
             if (this.year_rBtn.Checked)
             {
@@ -181,26 +214,11 @@ namespace W3_HK_TaxCalculator
 
         private decimal getResult()
         {
-            finalResult = (decimal)taxLevel[this.car_CBX.SelectedIndex][this.tax_CBX.SelectedIndex] * usedDate() / isLeapYear(this.dateTimePicker1.Value.Year);
-            return finalResult;
+            fullYearResult = (decimal)TaxClass.taxLevel[this.car_CBX.SelectedIndex]
+                [this.tax_CBX.SelectedIndex] * usedDate() / isLeapYear(this.dateTimePicker1.Value.Year);
+
+            return Math.Floor(fullYearResult); // 試算結果採無條件捨去
         }
-
-        //private string 跨日期整年度用()
-        //{
-        //    int sYear = Convert.ToInt32(this.dateTimePicker1.Value);
-        //    int eYear = Convert.ToInt32(this.dateTimePicker2.Value);
-        //    this.dateTimePicker1.Value.
-
-        //    if
-
-        //    this.lbl_Result.Text = $"使用期間 : {this.dateTimePicker1.Value.ToString("1-1")} ~ {this.dateTimePicker2.Value.ToString("yyyy-12-31")}" + Environment.NewLine + $"計算天數 : {usedDate()}" + Environment.NewLine + $"排氣量 : {this.tax_CBX.SelectedItem.ToString()}" + Environment.NewLine + $"用途 : {this.car_CBX.SelectedItem.ToString()}" + Environment.NewLine + $"計算公式 : {taxLevel[this.car_CBX.SelectedIndex][this.tax_CBX.SelectedIndex]} * {usedDate()} / {isLeapYear(this.dateTimePicker1.Value.Year)} = {getResult().ToString("#,0")} 元" + Environment.NewLine + $"應納稅額 : {getResult().ToString("#,0")} 元";
-
-        //    return "temp";
-        //}
-
         #endregion
-
-
-
     }
 }
